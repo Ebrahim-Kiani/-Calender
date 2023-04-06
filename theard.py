@@ -16,20 +16,25 @@ def get_data():
     button['state']  = DISABLED
       
     date = entry_date.get()
-    api_response=requests.get("https://pholiday.herokuapp.com/date/"+date)
+    api_response=requests.get("https://persiancalapi.ir/jalali/"+date)
     api_json = api_response.json()
     
     
     list_box.delete(0 , 'end')
     
+    if api_json['is_holiday']=='true':
+        is_holiday= True
+    else:
+        is_holiday=False
+    
     if (api_response.status_code)==200:
         
         for item in api_json['events']:    
-            event = (item['event'])        
+            event = (item['description'])        
             
             event_holiday =''
             
-            if item['isHoliday']==True:
+            if is_holiday==True:
                 
                 event_holiday = '(تعطیل)'
                 list_box.insert(END , event+event_holiday )
@@ -52,7 +57,7 @@ window.update_idletasks()
 window.geometry()
 window.resizable(width=False, height=False)
 
-Label_entry = Label(window , text = ' تاریخ را وارد کنید: (روز-ماه-سال)')
+Label_entry = Label(window , text = ' تاریخ را وارد کنید: (روز/ماه/سال)')
 Label_entry.grid(row = 0 , sticky= E )
 Label_entry.configure(justify =RIGHT)
 
